@@ -1,0 +1,173 @@
+mysql> DROP TABLE borrow;
+ERROR 1046 (3D000): No database selected
+mysql>
+mysql> -- Then run again
+Query OK, 0 rows affected (0.009 sec)
+
+mysql> CREATE TABLE borrow (
+    ->     borrow_id INT AUTO_INCREMENT PRIMARY KEY,
+    ->     user_id INT,
+    ->     book_id INT,
+    ->     borrow_date DATE,
+    ->     return_date DATE,
+    ->
+    ->     FOREIGN KEY (user_id) REFERENCES users(user_id),
+    ->     FOREIGN KEY (book_id) REFERENCES books(book_id)
+    -> );
+ERROR 1046 (3D000): No database selected
+mysql> DROP DATABASE library_db;
+Query OK, 3 rows affected (3.715 sec)
+
+mysql> CREATE DATABASE library_db;
+Query OK, 1 row affected (0.165 sec)
+
+mysql> USE library_db;
+Database changed
+mysql> DROP DATABASE IF EXISTS library_db;
+Query OK, 0 rows affected (0.522 sec)
+
+mysql> CREATE DATABASE library_db;
+Query OK, 1 row affected (0.137 sec)
+
+mysql> USE library_db;
+Database changed
+mysql> -- USERS TABLE
+Query OK, 0 rows affected (0.012 sec)
+
+mysql> CREATE TABLE users (
+    ->     user_id INT AUTO_INCREMENT PRIMARY KEY,
+    ->     name VARCHAR(100),
+    ->     email VARCHAR(100) UNIQUE
+    -> );
+Query OK, 0 rows affected (0.675 sec)
+
+mysql>
+mysql> -- BOOKS TABLE
+Query OK, 0 rows affected (0.003 sec)
+
+mysql> CREATE TABLE books (
+    ->     book_id INT AUTO_INCREMENT PRIMARY KEY,
+    ->     title VARCHAR(100),
+    ->     author VARCHAR(100),
+    ->     available_copies INT
+    -> );
+Query OK, 0 rows affected (0.337 sec)
+
+mysql>
+mysql> -- BORROW TABLE (RELATION)
+Query OK, 0 rows affected (0.010 sec)
+
+mysql> CREATE TABLE borrow (
+    ->     borrow_id INT AUTO_INCREMENT PRIMARY KEY,
+    ->     user_id INT,
+    ->     book_id INT,
+    ->     borrow_date DATE,
+    ->     return_date DATE,
+    ->
+    ->     FOREIGN KEY (user_id) REFERENCES users(user_id),
+    ->     FOREIGN KEY (book_id) REFERENCES books(book_id)
+    -> );
+Query OK, 0 rows affected (0.784 sec)
+
+mysql> DELETE FROM users;
+Query OK, 0 rows affected (0.417 sec)
+
+mysql> INSERT INTO users (name, email) VALUES
+    -> ('Arjun', 'arjun@gmail.com'),
+    -> ('Meera', 'meera@gmail.com');
+Query OK, 2 rows affected (0.475 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql>
+mysql> INSERT INTO books (title, author, available_copies) VALUES
+    -> ('DBMS Basics', 'Korth', 5),
+    -> ('Python Guide', 'Guido', 3);
+Query OK, 2 rows affected (0.121 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql>
+mysql> INSERT INTO borrow (user_id, book_id, borrow_date, return_date) VALUES
+    -> (1, 1, '2026-04-10', '2026-04-17'),
+    -> (2, 2, '2026-04-11', '2026-04-18');
+Query OK, 2 rows affected (0.363 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM users;
++---------+-------+-----------------+
+| user_id | name  | email           |
++---------+-------+-----------------+
+|       1 | Arjun | arjun@gmail.com |
+|       2 | Meera | meera@gmail.com |
++---------+-------+-----------------+
+2 rows in set (0.419 sec)
+
+mysql> SELECT * FROM books;
++---------+--------------+--------+------------------+
+| book_id | title        | author | available_copies |
++---------+--------------+--------+------------------+
+|       1 | DBMS Basics  | Korth  |                5 |
+|       2 | Python Guide | Guido  |                3 |
++---------+--------------+--------+------------------+
+2 rows in set (0.008 sec)
+
+mysql> SELECT * FROM borrow;
++-----------+---------+---------+-------------+-------------+
+| borrow_id | user_id | book_id | borrow_date | return_date |
++-----------+---------+---------+-------------+-------------+
+|         1 |       1 |       1 | 2026-04-10  | 2026-04-17  |
+|         2 |       2 |       2 | 2026-04-11  | 2026-04-18  |
++-----------+---------+---------+-------------+-------------+
+2 rows in set (0.320 sec)
+
+mysql> SHOW TABLES;
++----------------------+
+| Tables_in_library_db |
++----------------------+
+| books                |
+| borrow               |
+| users                |
++----------------------+
+3 rows in set (0.557 sec)
+
+mysql> USE library_db;
+Database changed
+mysql> SELECT * FROM users;
++---------+-------+-----------------+
+| user_id | name  | email           |
++---------+-------+-----------------+
+|       1 | Arjun | arjun@gmail.com |
+|       2 | Meera | meera@gmail.com |
++---------+-------+-----------------+
+2 rows in set (0.173 sec)
+
+mysql> SELECT * FROM books;
++---------+--------------+--------+------------------+
+| book_id | title        | author | available_copies |
++---------+--------------+--------+------------------+
+|       1 | DBMS Basics  | Korth  |                5 |
+|       2 | Python Guide | Guido  |                3 |
++---------+--------------+--------+------------------+
+2 rows in set (0.009 sec)
+
+mysql> SELECT * FROM borrow;
++-----------+---------+---------+-------------+-------------+
+| borrow_id | user_id | book_id | borrow_date | return_date |
++-----------+---------+---------+-------------+-------------+
+|         1 |       1 |       1 | 2026-04-10  | 2026-04-17  |
+|         2 |       2 |       2 | 2026-04-11  | 2026-04-18  |
++-----------+---------+---------+-------------+-------------+
+2 rows in set (0.014 sec)
+
+mysql> SELECT users.name, books.title, borrow.borrow_date
+    -> FROM borrow
+    -> JOIN users ON borrow.user_id = users.user_id
+    -> JOIN books ON borrow.book_id = books.book_id;
++-------+--------------+-------------+
+| name  | title        | borrow_date |
++-------+--------------+-------------+
+| Arjun | DBMS Basics  | 2026-04-10  |
+| Meera | Python Guide | 2026-04-11  |
++-------+--------------+-------------+
+2 rows in set (0.070 sec)
+
+mysql>
