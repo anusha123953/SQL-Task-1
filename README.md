@@ -8,6 +8,10 @@ Library Management Database project with SQL schema, ER diagram, and query imple
 - Books
 - Borrow
 
+## Relationships
+- One User can borrow many Books
+- One Book can be borrowed many times
+
 ## Features
 - Primary Key
 - Foreign Key
@@ -16,3 +20,8 @@ Library Management Database project with SQL schema, ER diagram, and query imple
 ## Queries
 - SELECT
 - JOIN
+- WHERE
+
+## Tools Used
+- MySQL
+- draw.io
